@@ -14,7 +14,7 @@ export const siteConfig = {
   githubUsername: "KairoqX",
   role: "Student Developer",
   tagline: "AI & ML Learner",
-  url: "https://kairoqx-portfolio.vercel.app", // TODO: replace with your real production domain
+  url: "https://kairoqx.vercel.app", // TODO: replace with your real production domain
   description:
     "KairoqX — a student developer learning AI, Machine Learning, LLMs and full-stack development. Building projects while learning, one line of code at a time.",
   location: "Uttar Pradesh, India",
