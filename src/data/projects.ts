@@ -58,7 +58,11 @@ export const projectsToShow: readonly ProjectEntry[] = [
   {repo: "micro-gpt",
     category: "ai",
     image: "/projects/micro-gpt.png"
-  },  
+  }, 
+   {repo:"ARIS",
+    category: "ai",
+    image: "/projects/ARIS.png",
+   },
   {repo: "Portable-LLM",
     category: "ai",
     image: "/projects/portable-llm.png"
@@ -66,6 +70,6 @@ export const projectsToShow: readonly ProjectEntry[] = [
 
   { repo: "Vexiqora", category: "web",image: "projects/vexiqora1.png" },
   "KazeOS",
-  "ARIS",
+  
   "MahiruAI",
 ];
