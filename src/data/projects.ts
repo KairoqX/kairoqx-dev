@@ -55,10 +55,17 @@ export type ProjectEntry =
     };
 
 export const projectsToShow: readonly ProjectEntry[] = [
-  "Portable-LLM",
-  "MahiruAI",
-  { repo: "Vexiqora", category: "web" },
+  {repo: "micro-gpt",
+    category: "ai",
+    image: "/projects/micro-gpt.png"
+  },  
+  {repo: "Portable-LLM",
+    category: "ai",
+    image: "/projects/portable-llm.png"
+  },
+
+  { repo: "Vexiqora", category: "web",image: "projects/vexiqora1.png" },
   "KazeOS",
   "ARIS",
-  "micro-gpt",
+  "MahiruAI",
 ];
