@@ -5,55 +5,61 @@ import { useEffect, useRef } from "react";
 /**
  * Desktop-only cursor glow + dot follower.
  *
- * BUG FIX NOTE: in the original build, elements like this sat *inside*
- * transformed/blurred ancestors, which in CSS creates a new "containing
- * block" for any `position: fixed` descendant (per spec, `transform`,
- * `filter`, `backdrop-filter`, `perspective`, `contain` and `will-change`
- * on an ancestor all do this). That silently turns `position: fixed`
- * into "fixed relative to that ancestor" instead of the viewport — which
- * only becomes visible once you interact with a hover/transform-driven
- * ancestor, i.e. only on desktop with a real mouse. Mobile never
- * triggered the hover transforms, so it "worked" there by accident.
+ * Mounted once, directly in the root layout (no transformed/blurred
+ * ancestor), so `position: fixed` stays relative to the viewport.
  *
- * Fix: this component is mounted once, directly in the root layout,
- * with no transformed/blurred parent above it — and `pointer-events-none`
- * everywhere so it can never intercept clicks meant for real UI.
+ * PERF changes:
+ *  - The animation loop only runs while the glow is still catching up to
+ *    the cursor, then stops. Before, a requestAnimationFrame loop ran
+ *    forever (60x/sec) even when the mouse was completely still.
+ *  - Removed `mix-blend-mode: screen` and the box-shadow glow on the dot.
+ *    A blend mode on a fixed, moving element forces the browser to
+ *    re-composite everything underneath it every frame.
+ *  - Skipped entirely on touch devices and when reduced motion is on.
  */
 export function CursorGlow() {
   const glowRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Skip entirely on touch/coarse-pointer devices — no mouse to follow.
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    if (isTouch) return;
+    const canHover = window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    ).matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (!canHover || reduced) return;
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let glowX = mouseX;
     let glowY = mouseY;
-    let rafId: number;
+    let rafId = 0;
+
+    const loop = () => {
+      glowX += (mouseX - glowX) * 0.12;
+      glowY += (mouseY - glowY) * 0.12;
+      if (glowRef.current) {
+        glowRef.current.style.transform = `translate3d(${glowX}px, ${glowY}px, 0) translate(-50%, -50%)`;
+      }
+      // Keep looping only while there's visible distance left to cover.
+      if (Math.abs(mouseX - glowX) > 0.5 || Math.abs(mouseY - glowY) > 0.5) {
+        rafId = requestAnimationFrame(loop);
+      } else {
+        rafId = 0;
+      }
+    };
 
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
       }
+      if (!rafId) rafId = requestAnimationFrame(loop);
     };
 
-    const loop = () => {
-      glowX += (mouseX - glowX) * 0.08;
-      glowY += (mouseY - glowY) * 0.08;
-      if (glowRef.current) {
-        glowRef.current.style.transform = `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
-      }
-      rafId = requestAnimationFrame(loop);
-    };
-
-    window.addEventListener("mousemove", onMouseMove);
-    rafId = requestAnimationFrame(loop);
-
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(rafId);
@@ -74,13 +80,7 @@ export function CursorGlow() {
       <div
         ref={dotRef}
         aria-hidden="true"
-        className="pointer-events-none fixed left-0 top-0 z-[100] hidden h-2.5 w-2.5 rounded-full will-change-transform md:block"
-        style={{
-          background: "var(--color-primary)",
-          boxShadow:
-            "0 0 12px var(--color-primary), 0 0 24px color-mix(in srgb, var(--color-primary) 50%, transparent)",
-          mixBlendMode: "screen",
-        }}
+        className="pointer-events-none fixed left-0 top-0 z-[100] hidden h-2.5 w-2.5 rounded-full bg-primary will-change-transform md:block"
       />
     </>
   );

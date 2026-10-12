@@ -168,6 +168,18 @@ export const timeline = [
  */
 export const fallbackProjects = [
   {
+    name: "Portable-LLM",
+    description:
+      "A simple, lightweight and portable local AI setup powered by llama.cpp.",
+    html_url: `https://github.com/${siteConfig.githubUsername}/Portable-LLM`,
+    homepage: null,
+    stargazers_count: 2,
+    language: "Batchfile",
+    topics: ["llama-cpp", "local-ai"],
+    pushed_at: new Date().toISOString(),
+    size: 15360,
+  },
+  {
     name: "MahiruAI",
     description:
       "An anime-inspired AI assistant with voice commands, automation, memory and intelligent conversations.",
@@ -178,6 +190,30 @@ export const fallbackProjects = [
     topics: ["python", "ai-assistant", "automation"],
     pushed_at: new Date().toISOString(),
     size: 1200,
+  },
+  {
+    name: "Vexiqora",
+    description:
+      "Free online developer tools for formatting JSON, comparing text, encoding Base64, and counting words.",
+    html_url: `https://github.com/${siteConfig.githubUsername}/Vexiqora`,
+    homepage: "https://vexiqora.vercel.app/",
+    stargazers_count: 1,
+    language: "TypeScript",
+    topics: ["nextjs", "developer-tools"],
+    pushed_at: new Date().toISOString(),
+    size: 1024,
+  },
+  {
+    name: "KazeOS",
+    description:
+      "A beginner-friendly terminal-based OS simulator built from scratch in Python for learning operating system concepts.",
+    html_url: `https://github.com/${siteConfig.githubUsername}/KazeOS`,
+    homepage: null,
+    stargazers_count: 1,
+    language: "Python",
+    topics: ["python", "operating-system"],
+    pushed_at: new Date().toISOString(),
+    size: 1024,
   },
   {
     name: "micro-gpt",

@@ -1,16 +1,19 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { motion, useScroll } from "framer-motion";
 
+/**
+ * PERF: driven by a Framer Motion MotionValue + `scaleX` (a GPU transform).
+ * The previous version put the scroll percentage in React state and animated
+ * `width`, which re-rendered React and re-ran layout on every scroll frame.
+ */
 export function ScrollProgressBar() {
-  const { progress } = useScrollProgress();
+  const { scrollYProgress } = useScroll();
 
   return (
     <motion.div
-      className="fixed left-0 top-0 z-[100] h-[3px] bg-gradient-to-r from-secondary to-primary"
-      style={{ width: `${progress}%` }}
-      transition={{ duration: 0.1 }}
+      className="fixed left-0 top-0 z-[100] h-[3px] w-full origin-left bg-gradient-to-r from-secondary to-primary"
+      style={{ scaleX: scrollYProgress }}
       aria-hidden="true"
     />
   );

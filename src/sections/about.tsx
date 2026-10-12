@@ -1,35 +1,8 @@
-"use client";
-
-import { useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
 import { aboutChips, aboutStats } from "@/lib/site-config";
 import { getIcon } from "@/lib/icons";
 import { Reveal, RevealStagger, RevealStaggerItem } from "@/components/ui/reveal";
 import { GlassCard } from "@/components/ui/glass-card";
-
-function CountUp({ target }: { target: number }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    const step = Math.max(1, Math.ceil(target / 60));
-    let current = 0;
-    const id = setInterval(() => {
-      current = Math.min(target, current + step);
-      setValue(current);
-      if (current >= target) clearInterval(id);
-    }, 16);
-    return () => clearInterval(id);
-  }, [inView, target]);
-
-  return (
-    <p ref={ref} className="font-display text-3xl font-bold text-gradient-brand">
-      {value}
-    </p>
-  );
-}
+import { CountUp } from "@/components/ui/count-up";
 
 export function About() {
   return (
@@ -52,7 +25,7 @@ export function About() {
 
         <div className="grid gap-6 md:grid-cols-5">
           <Reveal direction="left" className="md:col-span-3">
-            <GlassCard className="h-full p-8 md:p-10" tilt={false}>
+            <GlassCard className="h-full p-8 md:p-10">
               <p className="mb-5 text-lg leading-relaxed text-white/90">
                 I&apos;m currently exploring{" "}
                 <span className="font-medium text-white">
@@ -92,7 +65,10 @@ export function About() {
               <div className="mt-9 grid grid-cols-3 gap-4 border-t border-white/10 pt-8">
                 {aboutStats.map((stat) => (
                   <div key={stat.label} className="text-center">
-                    <CountUp target={stat.value} />
+                    <CountUp
+                      target={stat.value}
+                      className="font-display text-3xl font-bold text-gradient-brand"
+                    />
                     <p className="mt-1 font-mono text-xs text-muted">
                       {stat.label}
                     </p>

@@ -1,69 +1,61 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-import { type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { observeOnce } from "@/lib/in-view";
+import { cn } from "@/utils/cn";
 
 type RevealDirection = "up" | "left" | "right" | "scale" | "none";
+
+/**
+ * Marks the element `data-visible="true"` the first time it scrolls into
+ * view. The actual animation lives in globals.css (.reveal / .reveal-item)
+ * and only touches opacity + transform, so it runs on the GPU and never
+ * triggers layout.
+ *
+ * Uses a data attribute rather than a class on purpose: React never
+ * overwrites attributes it didn't render, so a re-render can't accidentally
+ * "un-reveal" the element.
+ */
+function useRevealOnView<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    return observeOnce(el, () => {
+      el.dataset.visible = "true";
+    });
+  }, []);
+
+  return ref;
+}
 
 interface RevealProps {
   children: ReactNode;
   direction?: RevealDirection;
+  /** Delay in seconds before the animation starts. */
   delay?: number;
   className?: string;
-  /** Set false to re-trigger every time it scrolls into view (default: once). */
-  once?: boolean;
 }
 
-const variantsFor = (direction: RevealDirection): Variants => {
-  const hiddenBase = { opacity: 0 };
-  const hidden =
-    direction === "up"
-      ? { ...hiddenBase, y: 28 }
-      : direction === "left"
-        ? { ...hiddenBase, x: -40 }
-        : direction === "right"
-          ? { ...hiddenBase, x: 40 }
-          : direction === "scale"
-            ? { ...hiddenBase, y: 16, scale: 0.94 }
-            : hiddenBase;
-
-  return {
-    hidden,
-    visible: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-    },
-  };
-};
-
-/**
- * Declarative scroll-reveal used throughout every section. Built on
- * Framer Motion's `whileInView`, which — unlike a hand-rolled
- * IntersectionObserver + CSS class toggle — correctly re-computes when
- * elements are inside `transform`-ed or `overflow`-clipped ancestors,
- * which is what caused reveals to silently fail on desktop only.
- */
+/** Scroll-reveal used throughout every section. */
 export function Reveal({
   children,
   direction = "up",
   delay = 0,
   className,
-  once = true,
 }: RevealProps) {
+  const ref = useRevealOnView<HTMLDivElement>();
+
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once, amount: 0.15, margin: "0px 0px -80px 0px" }}
-      variants={variantsFor(direction)}
-      transition={{ delay }}
+    <div
+      ref={ref}
+      data-reveal={direction}
+      className={cn("reveal", className)}
+      style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -77,16 +69,16 @@ export function RevealStagger({
   className?: string;
   staggerDelay?: number;
 }) {
+  const ref = useRevealOnView<HTMLDivElement>();
+
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ staggerChildren: staggerDelay }}
+    <div
+      ref={ref}
+      className={cn("reveal-stagger", className)}
+      style={{ "--stagger": `${staggerDelay}s` } as CSSProperties}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -100,8 +92,8 @@ export function RevealStaggerItem({
   className?: string;
 }) {
   return (
-    <motion.div className={className} variants={variantsFor(direction)}>
+    <div data-reveal={direction} className={cn("reveal-item", className)}>
       {children}
-    </motion.div>
+    </div>
   );
 }

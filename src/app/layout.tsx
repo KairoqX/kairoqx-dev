@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
@@ -8,26 +8,26 @@ import { ScrollProgressBar } from "@/components/ui/scroll-progress-bar";
 import { BackToTop } from "@/components/ui/back-to-top";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { CommandPalette } from "@/components/command-palette";
+import { CommandPaletteHost } from "@/components/command-palette-host";
 import Script from "next/script";
 import { PageLoader } from "@/components/page-loader";
 import { ScrollToTopOnLoad } from "@/components/scroll-to-top-on-load";
 
+// PERF: no explicit `weight` list -> Next loads each family as a single
+// variable-font file instead of a separate file per weight (was 10 font
+// files across the three families).
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   variable: "--font-body",
   display: "swap",
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -56,12 +56,24 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: ["/og-image.png"],
   },
+  // Favicon package lives in /public (favicon.ico, favicon-16x16.png,
+  // favicon-32x32.png, apple-touch-icon.png, android-chrome-*.png).
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/site.webmanifest",
   robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark",
 };
 
 const jsonLd = {
@@ -131,7 +143,7 @@ export default function RootLayout({
 
         <Footer />
         <BackToTop />
-        <CommandPalette />
+        <CommandPaletteHost />
       </body>
     </html>
   );

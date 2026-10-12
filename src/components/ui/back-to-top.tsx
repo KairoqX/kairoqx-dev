@@ -2,11 +2,11 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
-import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { useScrolledPast } from "@/hooks/use-scrolled-past";
 import { Magnetic } from "@/components/ui/magnetic";
 
 export function BackToTop() {
-  const { scrolled: pastThreshold } = useScrollProgress(600);
+  const pastThreshold = useScrolledPast(600);
 
   return (
     <AnimatePresence>

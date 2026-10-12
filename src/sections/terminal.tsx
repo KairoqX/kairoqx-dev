@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { motion } from "framer-motion";
 import { siteConfig, skillCategories } from "@/lib/site-config";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -151,7 +150,7 @@ export function TerminalWidget() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <motion.div
+          <div
             onClick={() => inputRef.current?.focus()}
             className="glass gradient-border overflow-hidden rounded-2xl"
           >
@@ -199,7 +198,7 @@ export function TerminalWidget() {
                 />
               </div>
             </div>
-          </motion.div>
+          </div>
         </Reveal>
       </div>
     </section>

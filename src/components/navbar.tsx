@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { navLinks, siteConfig } from "@/lib/site-config";
-import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { useScrolledPast } from "@/hooks/use-scrolled-past";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { Magnetic } from "@/components/ui/magnetic";
 import { Button } from "@/components/ui/button";
@@ -13,16 +13,17 @@ import { Button } from "@/components/ui/button";
 const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
 
 export function Navbar() {
-  const { scrolled } = useScrollProgress();
+  const scrolled = useScrolledPast(40);
   const activeId = useActiveSection(sectionIds);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background,border-color,box-shadow] duration-400",
-        scrolled &&
-          "border-white/8 bg-[#000000]/72 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+        "fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color] duration-300",
+        // PERF: solid-ish background instead of backdrop-blur-xl + a large
+        // box-shadow — a blur over scrolling content is re-computed every frame.
+        scrolled && "border-white/10 bg-black/85"
       )}
     >
       <nav

@@ -8,6 +8,8 @@ import { ProjectCard, type ProjectCardData } from "@/components/project-card";
 const KNOWN_WEB_TOPICS = ["nextjs", "react", "web", "portfolio", "html", "css"];
 
 function categorize(project: ProjectCardData): "ai" | "web" {
+  // An explicit category set in src/data/projects.ts always wins.
+  if (project.category) return project.category;
   const haystack = [
     project.language ?? "",
     ...project.topics,
@@ -56,7 +58,7 @@ export function ProjectsGrid({ projects }: { projects: ProjectCardData[] }) {
       </div>
 
       <motion.div layout className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
           {filtered.map(({ project }, i) => (
             <motion.div
               key={project.name}

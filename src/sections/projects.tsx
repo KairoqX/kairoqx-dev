@@ -1,16 +1,17 @@
-import { getGithubProfileData, pickFeaturedRepos } from "@/lib/github";
+import { getGithubProfileData, selectProjects } from "@/lib/github";
 import { Reveal } from "@/components/ui/reveal";
 import { ProjectsGrid } from "@/components/projects-grid";
 
 /**
  * Server Component: fetches live repo data from the GitHub REST API at
- * request/build time (see src/lib/github.ts). No project is hardcoded —
- * add/remove/rename a repo on GitHub and it shows up here automatically
- * on the next revalidation (hourly, or immediately in dev).
+ * request/build time (see src/lib/github.ts), then shows the repos you
+ * chose in src/data/projects.ts. Details (description, stars, language,
+ * last push...) always come live from GitHub and refresh hourly.
  */
 export async function Projects() {
   const { repos, isLive } = await getGithubProfileData();
-  const featured = pickFeaturedRepos(repos, 6);
+  // Which projects show up is controlled by src/data/projects.ts.
+  const featured = selectProjects(repos);
 
   return (
     <section id="projects" className="relative py-28 md:py-36">

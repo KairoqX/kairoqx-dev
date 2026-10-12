@@ -32,7 +32,6 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 8s ease-in-out infinite;
   --animate-blob: blob 16s ease-in-out infinite;
-  --animate-gradient-shift: gradientShift 22s ease infinite;
   --animate-blink: blink 1s step-end infinite;
 }
 
@@ -56,18 +55,6 @@
   }
   66% {
     transform: translate(-25px, 25px) scale(0.95);
-  }
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
   }
 }
 
@@ -122,11 +109,15 @@ textarea:focus-visible {
    Kept minimal — most styling should live in components via Tailwind
    classes; these cover effects awkward to express with utilities alone.
    =========================================================================== */
-.glass {
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+@layer components {
+  .glass {
+    /* PERF: no backdrop-filter here. A blur over the page forces the browser
+       to re-sample + re-blur everything behind the element on every frame it
+       scrolls/animates — with 30+ glass elements that was the main cause of
+       lag. On a near-black background a translucent fill looks the same. */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
 }
 
 .text-gradient-brand {
@@ -136,51 +127,23 @@ textarea:focus-visible {
   color: transparent;
 }
 
-.gradient-border {
-  position: relative;
-  /* No border-radius set here on purpose — every usage supplies its own
-     Tailwind rounded-* class (rounded-full, rounded-2xl, etc). This used
-     to hardcode border-radius: 1.25rem, which — because Tailwind's
-     utilities live inside a CSS cascade layer while this rule doesn't —
-     silently beat `rounded-full` everywhere (unlayered CSS always wins
-     over layered CSS regardless of source order or specificity). That's
-     what was making the hero profile photo a rounded square instead of
-     a circle. */
-}
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-secondary) 60%, transparent),
-    color-mix(in srgb, var(--color-primary) 45%, transparent),
-    transparent 70%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+@layer components {
+  .gradient-border {
+    /* PERF: was a ::before pseudo-element with mask-composite (an expensive
+       masked layer per card). A static inset highlight looks near-identical
+       and costs nothing. Radius comes from each element's own rounded-* class. */
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.12);
+  }
 }
 
 .animated-gradient-bg {
+  /* PERF: static now. It used to animate background-position on a
+     full-screen fixed layer, which repaints the whole screen every frame. */
   background:
     radial-gradient(ellipse 80% 60% at 15% 10%, color-mix(in srgb, var(--color-secondary) 22%, transparent), transparent 60%),
     radial-gradient(ellipse 70% 60% at 85% 25%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 60%),
     radial-gradient(ellipse 60% 50% at 50% 100%, color-mix(in srgb, var(--color-secondary) 14%, transparent), transparent 60%),
     var(--color-bg);
-  background-size: 200% 200%;
-  animation: var(--animate-gradient-shift);
-}
-
-.noise-layer {
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .typing-cursor {
@@ -189,6 +152,97 @@ textarea:focus-visible {
   margin-left: 2px;
   background: var(--color-primary);
   animation: var(--animate-blink);
+}
+
+/* ===========================================================================
+   SCROLL REVEAL (CSS-only; replaces a Framer Motion wrapper per element)
+   Only opacity + transform are animated, so it runs on the GPU compositor.
+   =========================================================================== */
+.reveal,
+.reveal-item {
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal[data-reveal="up"],
+.reveal-item[data-reveal="up"] {
+  transform: translate3d(0, 28px, 0);
+}
+.reveal[data-reveal="left"],
+.reveal-item[data-reveal="left"] {
+  transform: translate3d(-40px, 0, 0);
+}
+.reveal[data-reveal="right"],
+.reveal-item[data-reveal="right"] {
+  transform: translate3d(40px, 0, 0);
+}
+.reveal[data-reveal="scale"],
+.reveal-item[data-reveal="scale"] {
+  transform: translate3d(0, 16px, 0) scale(0.94);
+}
+.reveal[data-visible="true"],
+.reveal-stagger[data-visible="true"] > .reveal-item {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger: each child waits (index * --stagger) before animating. */
+.reveal-item {
+  transition-delay: calc(var(--i, 0) * var(--stagger, 0.09s));
+}
+.reveal-stagger > :nth-child(1) { --i: 0; }
+.reveal-stagger > :nth-child(2) { --i: 1; }
+.reveal-stagger > :nth-child(3) { --i: 2; }
+.reveal-stagger > :nth-child(4) { --i: 3; }
+.reveal-stagger > :nth-child(5) { --i: 4; }
+.reveal-stagger > :nth-child(6) { --i: 5; }
+.reveal-stagger > :nth-child(7) { --i: 6; }
+.reveal-stagger > :nth-child(8) { --i: 7; }
+.reveal-stagger > :nth-child(9) { --i: 8; }
+.reveal-stagger > :nth-child(10) { --i: 9; }
+.reveal-stagger > :nth-child(11) { --i: 10; }
+.reveal-stagger > :nth-child(12) { --i: 11; }
+
+/* ===========================================================================
+   SKILL / LANGUAGE BARS — animate transform (scaleX), not width, so no
+   layout is triggered while the bar fills.
+   =========================================================================== */
+.bar-fill {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.bar-fill[data-visible="true"] {
+  transform: scaleX(var(--fill, 1));
+}
+
+/* ===========================================================================
+   PAGE LOADER — pure CSS, no JS/hydration needed. Shows briefly, fades out,
+   then stops intercepting clicks. Nothing keeps animating after it's gone.
+   =========================================================================== */
+.page-loader {
+  animation: loader-out 0.45s ease 0.35s forwards;
+}
+.page-loader-spinner {
+  animation: loader-spin 0.8s linear 1;
+}
+@keyframes loader-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Decorative hero glow blobs: radial gradients instead of CSS blur() filters. */
+.hero-blob {
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {

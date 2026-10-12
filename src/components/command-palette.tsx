@@ -1,29 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Command } from "cmdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Search } from "lucide-react";
 import { GithubIcon } from "@/components/ui/brand-icons";
 import { navLinks, siteConfig, socialLinks } from "@/lib/site-config";
 
-export function CommandPalette() {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
-        e.preventDefault();
-        setOpen((o) => !o);
-      }
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
-
+export function CommandPalette({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   function go(href: string) {
-    setOpen(false);
+    onOpenChange(false);
     if (href.startsWith("#")) {
       document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
     } else {
@@ -38,8 +29,8 @@ export function CommandPalette() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[200] flex items-start justify-center bg-black/60 pt-[15vh] backdrop-blur-sm"
-          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-[200] flex items-start justify-center bg-black/75 pt-[15vh]"
+          onClick={() => onOpenChange(false)}
         >
           <motion.div
             initial={{ opacity: 0, y: -12, scale: 0.98 }}

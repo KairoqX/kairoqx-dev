@@ -18,9 +18,23 @@ const orbitBadges = [
   { icon: "terminal", label: "Linux", position: "-bottom-4 left-6", delay: -3.6 },
 ];
 
-export function Hero() {
+/**
+ * PERF: the typing effect updates state every 35-70ms, forever. Living
+ * inside <Hero> meant the *entire* hero (canvas wrapper, springs, social
+ * links, orbit badges...) re-rendered on every keystroke. Isolated here,
+ * only this one <span> re-renders.
+ */
+function TypedText() {
   const typedText = useTypingEffect(roles);
+  return (
+    <>
+      <span className="text-white/90">{typedText}</span>
+      <span className="typing-cursor h-[1em] align-middle" />
+    </>
+  );
+}
 
+export function Hero() {
   // Mouse-parallax for the profile orb: the orb subtly leans away from
   // the cursor, giving the hero a sense of 3D depth.
   const parallaxX = useMotionValue(0);
@@ -44,16 +58,26 @@ export function Hero() {
       onMouseMove={handleSectionMouseMove}
       className="relative flex min-h-screen items-center overflow-hidden pb-16 pt-24"
     >
-      {/* Decorative blobs — pointer-events-none so they never block clicks */}
+      {/* Decorative glow blobs — radial gradients instead of blur() filters
+          (an 80px blur on a 420px element is very expensive to paint).
+          pointer-events-none so they never block clicks. */}
       <div
         aria-hidden="true"
-        className="animate-blob pointer-events-none absolute -left-40 top-0 h-[420px] w-[420px] rounded-full bg-secondary opacity-30 blur-[80px]"
-        style={{ animation: "blob 16s ease-in-out infinite" }}
+        className="hero-blob animate-blob pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(212,212,212,0.2), transparent 68%)",
+        }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 h-[380px] w-[380px] rounded-full bg-primary opacity-30 blur-[80px]"
-        style={{ animation: "blob 16s ease-in-out infinite", animationDelay: "-6s" }}
+        className="hero-blob pointer-events-none absolute bottom-0 right-0 h-[480px] w-[480px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.18), transparent 68%)",
+          animation: "blob 16s ease-in-out infinite",
+          animationDelay: "-6s",
+        }}
       />
 
       <HeroNetworkCanvas />
@@ -74,8 +98,7 @@ export function Hero() {
               Hi, I&apos;m{" "}
               <span className="text-gradient-brand">{siteConfig.name}</span>.
               <br />
-              <span className="text-white/90">{typedText}</span>
-              <span className="typing-cursor h-[1em] align-middle" />
+              <TypedText />
             </h1>
           </Reveal>
 
@@ -141,8 +164,12 @@ export function Hero() {
           >
             <div
               aria-hidden="true"
-              className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-br from-secondary/40 to-primary/30 blur-3xl"
-              style={{ animationDuration: "4s" }}
+              className="absolute -inset-10 animate-pulse rounded-full"
+              style={{
+                animationDuration: "4s",
+                background:
+                  "radial-gradient(circle, rgba(255,255,255,0.22), transparent 68%)",
+              }}
             />
             {/* Holographic rings */}
             <div
@@ -161,6 +188,7 @@ export function Hero() {
                 width={320}
                 height={320}
                 className="h-full w-full object-cover"
+                sizes="(min-width: 640px) 320px, 288px"
                 priority
               />
             </div>

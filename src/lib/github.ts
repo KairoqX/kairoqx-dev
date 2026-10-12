@@ -14,6 +14,16 @@
  */
 
 import { fallbackProjects, siteConfig, type FallbackProject } from "./site-config";
+import {
+  projectsToShow,
+  type ProjectCategory,
+  type ProjectEntry,
+} from "@/data/projects";
+
+// Re-exported so existing imports keep working. The implementation lives in
+// a tiny standalone util so client components don't have to pull in this
+// whole server-side module just to format a date.
+export { formatRelativeTime } from "@/utils/format-relative-time";
 
 const GITHUB_API = "https://api.github.com";
 const REVALIDATE_SECONDS = 60 * 60; // 1 hour
@@ -148,19 +158,65 @@ export function pickFeaturedRepos<T extends { stargazers_count: number; pushed_a
     .slice(0, limit);
 }
 
-export function formatRelativeTime(dateStr: string): string {
-  const date = new Date(dateStr);
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  const intervals: [number, string][] = [
-    [31536000, "year"],
-    [2592000, "month"],
-    [86400, "day"],
-    [3600, "hour"],
-    [60, "minute"],
-  ];
-  for (const [secs, label] of intervals) {
-    const count = Math.floor(seconds / secs);
-    if (count >= 1) return `${count} ${label}${count > 1 ? "s" : ""} ago`;
+/** A project ready to render as a card (GitHub data + any overrides). */
+export interface SelectedProject extends FallbackProject {
+  /** Display name override from src/data/projects.ts. */
+  title?: string;
+  /** Filter-tab override from src/data/projects.ts. */
+  category?: ProjectCategory;
+  /** Banner image/GIF override from src/data/projects.ts. */
+  image?: string;
+}
+
+/**
+ * Builds the Projects-section list from the repos you chose in
+ * src/data/projects.ts (in that order), using live GitHub data for each.
+ * Falls back to the auto "top repos" heuristic if nothing is configured or
+ * none of the configured names match a repo.
+ */
+export function selectProjects(
+  repos: FallbackProject[],
+  entries: readonly ProjectEntry[] = projectsToShow,
+  fallbackLimit = 6
+): SelectedProject[] {
+  if (entries.length > 0) {
+    const byName = new Map(repos.map((r) => [r.name.toLowerCase(), r]));
+    const picked: SelectedProject[] = [];
+
+    for (const entry of entries) {
+      const cfg = typeof entry === "string" ? { repo: entry } : entry;
+      const repo = byName.get(cfg.repo.toLowerCase());
+
+      if (!repo) {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn(
+            `[projects] "${cfg.repo}" is listed in src/data/projects.ts but no matching public, non-fork repo was found.`
+          );
+        }
+        continue;
+      }
+
+      picked.push({
+        name: repo.name,
+        title: "title" in cfg ? cfg.title : undefined,
+        description:
+          ("description" in cfg ? cfg.description : undefined) ??
+          repo.description,
+        html_url: repo.html_url,
+        homepage:
+          ("homepage" in cfg ? cfg.homepage : undefined) ?? repo.homepage,
+        stargazers_count: repo.stargazers_count,
+        language: repo.language,
+        topics: repo.topics ?? [],
+        pushed_at: repo.pushed_at,
+        size: repo.size,
+        category: "category" in cfg ? cfg.category : undefined,
+        image: "image" in cfg ? cfg.image : undefined,
+      });
+    }
+
+    if (picked.length > 0) return picked;
   }
-  return "just now";
+
+  return pickFeaturedRepos(repos, fallbackLimit);
 }
