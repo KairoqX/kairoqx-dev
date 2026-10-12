@@ -63,13 +63,17 @@ export const projectsToShow: readonly ProjectEntry[] = [
     category: "ai",
     image: "/projects/ARIS.png",
    },
+
+  {repo:"KazeOS",
+    image: "/projects/kazeos.png"
+  },
   {repo: "Portable-LLM",
     category: "ai",
     image: "/projects/portable-llm.png"
   },
 
   { repo: "Vexiqora", category: "web",image: "projects/vexiqora1.png" },
-  "KazeOS",
+
   
   "MahiruAI",
 ];
