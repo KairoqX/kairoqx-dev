@@ -38,15 +38,15 @@ export function ProgressBar({
   return (
     <div>
       <div className="mb-2 flex justify-between font-mono text-xs text-muted">
-        <span className="text-white/80">{label}</span>
+        <span className="text-ink">{label}</span>
         <span>{value}%</span>
       </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-white/[.06]">
+      <div className="h-1.5 overflow-hidden rounded-full bg-ink/[.08]">
         <div
           ref={fillRef}
           className={cn(
             "bar-fill h-full w-full rounded-full",
-            color === "brand" && "bg-gradient-to-r from-secondary to-primary"
+            color === "brand" && "bg-ink"
           )}
           style={
             {

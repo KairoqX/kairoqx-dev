@@ -55,29 +55,26 @@ export type ProjectEntry =
     };
 
 export const projectsToShow: readonly ProjectEntry[] = [
-  {repo: "micro-gpt",
-    category: "ai",
-    image: "/projects/micro-gpt.png"
-  }, 
-   {repo:"ARIS",
-    category: "ai",
-    image: "/projects/ARIS.png",
-   },
+  { repo: "micro-gpt", image: "/projects/micro-gpt.webp" },
 
-  {repo:"KazeOS",
-    image: "/projects/kazeos.png"
-  },
   {repo: "MahiruAI",
-    category: "ai",
+    category: 'ai',
     image: "/projects/mahiruai.png"
   },
 
-  {repo: "Portable-LLM",
-    category: "ai",
-    image: "/projects/portable-llm.png"
+  { repo: "ARIS", image: "/projects/ARIS.png" },
+
+
+  {repo: "KazeOS",
+    image: "/projects/kazeos.png"
   },
 
-  { repo: "Vexiqora", category: "web",image: "projects/vexiqora1.png" },
 
+
+  { repo: "Vexiqora",
+     category: "web",
+    image: "/projects/vexiqora.png"
+    },
+  "Portable-LLM",
 
 ];

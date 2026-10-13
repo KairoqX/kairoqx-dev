@@ -4,10 +4,10 @@ import { Magnetic } from "@/components/ui/magnetic";
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/5 py-12">
+    <footer className="relative border-t border-line py-12">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 md:flex-row md:px-8">
         <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-secondary to-primary text-sm font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-ink text-sm font-bold text-bg">
             K
           </span>
           <div>
@@ -28,7 +28,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="glass flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:text-secondary"
+                  className="glass flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:border-ink hover:text-ink"
                 >
                   <Icon size={18} />
                 </a>

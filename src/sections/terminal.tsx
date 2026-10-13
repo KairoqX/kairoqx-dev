@@ -136,29 +136,29 @@ export function TerminalWidget() {
     <section id="terminal" className="relative py-28 md:py-36">
       <div className="mx-auto max-w-5xl px-5 md:px-8">
         <Reveal className="mb-14 max-w-2xl">
-          <span className="font-mono text-sm tracking-wide text-secondary">
+          <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
             {"// interactive terminal"}
           </span>
-          <h2 className="mb-4 mt-3 font-display text-3xl font-bold md:text-4xl">
+          <h2 className="mb-4 mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
             Poke around, it&apos;s real
           </h2>
           <p className="leading-relaxed text-muted">
-            A tiny shell — try <span className="text-white">help</span>,{" "}
-            <span className="text-white">whoami</span>, or{" "}
-            <span className="text-white">skills</span>.
+            A tiny shell — try <span className="font-mono text-ink">help</span>,{" "}
+            <span className="font-mono text-ink">whoami</span>, or{" "}
+            <span className="font-mono text-ink">skills</span>.
           </p>
         </Reveal>
 
         <Reveal delay={0.1}>
           <div
             onClick={() => inputRef.current?.focus()}
-            className="glass gradient-border overflow-hidden rounded-2xl"
+            className="overflow-hidden rounded-xl bg-panel text-white shadow-[10px_10px_0_0_rgba(22,22,22,0.08)]"
           >
-            <div className="flex items-center gap-2 border-b border-white/10 bg-white/[.03] px-4 py-3">
-              <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
-              <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-              <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
-              <span className="ml-3 font-mono text-xs text-muted">
+            <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
+              <span className="h-2.5 w-2.5 rounded-full bg-white" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white" />
+              <span className="ml-3 font-mono text-xs text-white/50">
                 kairoqx@portfolio: ~
               </span>
             </div>
@@ -171,12 +171,12 @@ export function TerminalWidget() {
                 <div key={i} className="mb-1.5 leading-relaxed">
                   {line.type === "input" ? (
                     <span>
-                      <span className="text-success">➜ </span>
-                      <span className="text-secondary">~</span>{" "}
+                      <span className="text-white/60">➜ </span>
+                      <span className="text-white/45">~</span>{" "}
                       <span className="text-white">{line.text}</span>
                     </span>
                   ) : (
-                    <span className="whitespace-pre-wrap text-muted">
+                    <span className="whitespace-pre-wrap text-white/60">
                       {line.text}
                     </span>
                   )}
@@ -184,8 +184,8 @@ export function TerminalWidget() {
               ))}
 
               <div className="flex items-center gap-2">
-                <span className="text-success">➜</span>
-                <span className="text-secondary">~</span>
+                <span className="text-white/60">➜</span>
+                <span className="text-white/45">~</span>
                 <input
                   ref={inputRef}
                   value={input}

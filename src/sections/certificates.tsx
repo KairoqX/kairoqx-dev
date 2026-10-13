@@ -8,10 +8,10 @@ export function Certificates() {
     <section id="certificates" className="relative py-28 md:py-36">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mb-14 max-w-2xl">
-          <span className="font-mono text-sm tracking-wide text-secondary">
+          <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
             {"// certificates"}
           </span>
-          <h2 className="mb-4 mt-3 font-display text-3xl font-bold md:text-4xl">
+          <h2 className="mb-4 mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
             Courses I&apos;ve completed
           </h2>
           <p className="leading-relaxed text-muted">
@@ -25,7 +25,7 @@ export function Certificates() {
             return (
               <RevealStaggerItem key={cert.title} direction="scale">
                 <GlassCard className="flex items-start gap-4 p-6">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-secondary/25 to-primary/20 text-secondary">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line bg-bg text-ink">
                     <Icon size={20} />
                   </div>
                   <div>

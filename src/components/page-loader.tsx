@@ -15,10 +15,9 @@ export function PageLoader() {
     >
       <div className="text-center">
         <div
-          className="page-loader-spinner mx-auto mb-4 h-14 w-14 rounded-full border-[3px] border-white/10"
+          className="page-loader-spinner mx-auto mb-4 h-14 w-14 rounded-full border-[3px] border-line"
           style={{
-            borderTopColor: "var(--color-secondary)",
-            borderRightColor: "var(--color-primary)",
+            borderTopColor: "var(--color-ink)",
           }}
         />
         <p className="font-mono text-xs tracking-widest text-muted">

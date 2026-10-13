@@ -9,10 +9,10 @@ export function About() {
     <section id="about" className="relative py-28 md:py-36">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mb-14 max-w-2xl">
-          <span className="font-mono text-sm tracking-wide text-secondary">
+          <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
             {"// about me"}
           </span>
-          <h2 className="mb-4 mt-3 font-display text-3xl font-bold md:text-4xl">
+          <h2 className="mb-4 mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
             Still learning, always building.
           </h2>
           <p className="leading-relaxed text-muted">
@@ -26,26 +26,26 @@ export function About() {
         <div className="grid gap-6 md:grid-cols-5">
           <Reveal direction="left" className="md:col-span-3">
             <GlassCard className="h-full p-8 md:p-10">
-              <p className="mb-5 text-lg leading-relaxed text-white/90">
+              <p className="mb-5 text-lg leading-relaxed text-ink/90">
                 I&apos;m currently exploring{" "}
-                <span className="font-medium text-white">
+                <span className="font-medium text-ink">
                   Artificial Intelligence
                 </span>
                 ,{" "}
-                <span className="font-medium text-white">
+                <span className="font-medium text-ink">
                   Machine Learning
                 </span>{" "}
                 and{" "}
-                <span className="font-medium text-white">
+                <span className="font-medium text-ink">
                   Large Language Models
                 </span>
                 , alongside picking up{" "}
-                <span className="font-medium text-white">
+                <span className="font-medium text-ink">
                   full-stack development
                 </span>
                 ,{" "}
-                <span className="font-medium text-white">Linux</span> and{" "}
-                <span className="font-medium text-white">open source</span>{" "}
+                <span className="font-medium text-ink">Linux</span> and{" "}
+                <span className="font-medium text-ink">open source</span>{" "}
                 along the way.
               </p>
               <p className="mb-5 leading-relaxed text-muted">
@@ -62,7 +62,7 @@ export function About() {
                 not something to hide.
               </p>
 
-              <div className="mt-9 grid grid-cols-3 gap-4 border-t border-white/10 pt-8">
+              <div className="mt-9 grid grid-cols-3 gap-4 border-t border-line pt-8">
                 {aboutStats.map((stat) => (
                   <div key={stat.label} className="text-center">
                     <CountUp
@@ -84,7 +84,7 @@ export function About() {
               return (
                 <RevealStaggerItem key={chip.label} direction="scale">
                   <GlassCard className="flex flex-col items-start gap-3 p-5">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-secondary/25 to-primary/20 text-secondary">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-bg text-ink">
                       <Icon size={20} />
                     </div>
                     <p className="text-sm font-medium">{chip.label}</p>

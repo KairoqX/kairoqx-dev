@@ -8,7 +8,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { Magnetic } from "@/components/ui/magnetic";
 import { Button } from "@/components/ui/button";
 
-const langColors = ["#FFFFFF", "#D4D4D4", "#A3A3A3", "#737373", "#525252"];
+const langColors = ["#161616", "#3f3f3f", "#6b6b6b", "#9a9a96", "#c4c4bf"];
 
 export async function GithubSection() {
   const { user, repos, totalStars, languageBreakdown, isLive } =
@@ -25,10 +25,10 @@ export async function GithubSection() {
     <section id="github" className="relative py-28 md:py-36">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mb-8 max-w-2xl">
-          <span className="font-mono text-sm tracking-wide text-secondary">
+          <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
             {"// github activity"}
           </span>
-          <h2 className="mb-4 mt-3 font-display text-3xl font-bold md:text-4xl">
+          <h2 className="mb-4 mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
             Building in public
           </h2>
           <p className="leading-relaxed text-muted">
@@ -57,7 +57,7 @@ export async function GithubSection() {
           {stats.map((stat) => (
             <RevealStaggerItem key={stat.label} direction="scale">
               <GlassCard className="p-6 text-center">
-                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-secondary/25 to-primary/20 text-secondary">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-bg text-ink">
                   <stat.icon size={20} />
                 </div>
                 <p className="font-display text-2xl font-bold">{stat.value}</p>
@@ -74,9 +74,9 @@ export async function GithubSection() {
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`https://ghchart.rshah.org/3B82F6/${siteConfig.githubUsername}`}
+              src={`https://ghchart.rshah.org/161616/${siteConfig.githubUsername}`}
               alt={`${siteConfig.name} GitHub contribution graph`}
-              className="w-full rounded-xl"
+              className="w-full rounded-lg"
               loading="lazy"
             />
           </GlassCard>

@@ -2,36 +2,42 @@
 
 /**
  * ===========================================================================
- * THEME TOKENS
+ * THEME TOKENS — clean monochrome "paper & ink" look
  * ===========================================================================
- * Palette: monochrome black & white.
- *   --color-primary   : White (brand accent)
- *   --color-secondary : Light gray (brand accent)
- *   --color-success   : Light gray (used sparingly for "live/available" signals)
- * Change these three and the whole site's accent colors update everywhere,
- * since every component references these tokens instead of raw hex values.
+ *   --color-bg       : off-white paper background
+ *   --color-surface  : card / panel fill (pure white)
+ *   --color-ink      : near-black text, buttons, lines of emphasis
+ *   --color-panel    : dark panels (terminal, hero accent shapes)
+ *   --color-line     : thin hairline borders
+ *   --color-muted    : secondary grey text
+ * `primary` / `secondary` are kept as aliases of the ink tones so any older
+ * class that still references them keeps working. Change the tokens here and
+ * the whole site follows.
  * ===========================================================================
  */
 @theme inline {
-  --color-bg: #000000;
-  --color-bg-elevated: #0d0d0d;
+  --color-bg: #f3f3f1;
+  --color-bg-elevated: #ffffff;
+  --color-surface: #ffffff;
+  --color-ink: #161616;
+  --color-panel: #1c1c1e;
+  --color-line: #d9d9d4;
 
-  --color-primary: #ffffff; /* white */
-  --color-primary-dim: #b3b3b3;
-  --color-secondary: #d4d4d4; /* light gray */
-  --color-secondary-dim: #8c8c8c;
-  --color-success: #e5e5e5;
+  --color-primary: #161616;
+  --color-primary-dim: #3a3a3a;
+  --color-secondary: #555555;
+  --color-secondary-dim: #8a8a8a;
+  --color-success: #161616;
 
-  --color-text: #ffffff;
-  --color-muted: #9ca3af;
+  --color-text: #161616;
+  --color-muted: #6b6b6b;
 
-  --font-display: "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-display: "Montserrat", ui-sans-serif, sans-serif;
   --font-body: "Inter", ui-sans-serif, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 8s ease-in-out infinite;
-  --animate-blob: blob 16s ease-in-out infinite;
   --animate-blink: blink 1s step-end infinite;
 }
 
@@ -41,20 +47,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-14px);
-  }
-}
-
-@keyframes blob {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(30px, -40px) scale(1.1);
-  }
-  66% {
-    transform: translate(-25px, 25px) scale(0.95);
+    transform: translateY(-10px);
   }
 }
 
@@ -79,8 +72,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-primary);
-  color: #fff;
+  background: var(--color-ink);
+  color: var(--color-bg);
 }
 
 ::-webkit-scrollbar {
@@ -90,68 +83,72 @@ body {
   background: var(--color-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--color-secondary), var(--color-primary));
+  background: #b9b9b4;
   border-radius: 10px;
   border: 2px solid var(--color-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink);
 }
 
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-secondary);
+  outline: 2px solid var(--color-ink);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 /* ===========================================================================
-   REUSABLE UTILITY CLASSES
-   Kept minimal — most styling should live in components via Tailwind
-   classes; these cover effects awkward to express with utilities alone.
+   REUSABLE CLASSES
    =========================================================================== */
 @layer components {
+  /* Flat white panel with a hairline border. (Kept under the old `.glass`
+     name so existing markup keeps working — there's no glass effect any
+     more: no blur, no transparency.) */
   .glass {
-    /* PERF: no backdrop-filter here. A blur over the page forces the browser
-       to re-sample + re-blur everything behind the element on every frame it
-       scrolls/animates — with 30+ glass elements that was the main cause of
-       lag. On a near-black background a translucent fill looks the same. */
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
   }
 }
 
 .text-gradient-brand {
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@layer components {
-  .gradient-border {
-    /* PERF: was a ::before pseudo-element with mask-composite (an expensive
-       masked layer per card). A static inset highlight looks near-identical
-       and costs nothing. Radius comes from each element's own rounded-* class. */
-    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.12);
-  }
-}
-
-.animated-gradient-bg {
-  /* PERF: static now. It used to animate background-position on a
-     full-screen fixed layer, which repaints the whole screen every frame. */
-  background:
-    radial-gradient(ellipse 80% 60% at 15% 10%, color-mix(in srgb, var(--color-secondary) 22%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 60% at 85% 25%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 50% 100%, color-mix(in srgb, var(--color-secondary) 14%, transparent), transparent 60%),
-    var(--color-bg);
+  color: var(--color-ink);
 }
 
 .typing-cursor {
   display: inline-block;
-  width: 3px;
-  margin-left: 2px;
-  background: var(--color-primary);
+  width: 2px;
+  margin-left: 3px;
+  background: var(--color-ink);
   animation: var(--animate-blink);
+}
+
+/* ---------------------------------------------------------------------------
+   Decorative geometry borrowed from the project banners: dark angled corner
+   blocks, a light-grey strip, and thin diagonal rules. Pure CSS, static.
+   --------------------------------------------------------------------------- */
+.shape-tri-br {
+  background: var(--color-ink);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.shape-tri-tl {
+  background: var(--color-ink);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.shape-tri-l {
+  background: var(--color-ink);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.shape-strip {
+  background: rgba(22, 22, 22, 0.06);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%);
+}
+.rule-diagonal {
+  height: 1px;
+  background: var(--color-ink);
+  transform-origin: left center;
 }
 
 /* ===========================================================================
@@ -238,11 +235,6 @@ textarea:focus-visible {
   to {
     transform: rotate(360deg);
   }
-}
-
-/* Decorative hero glow blobs: radial gradients instead of CSS blur() filters. */
-.hero-blob {
-  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {

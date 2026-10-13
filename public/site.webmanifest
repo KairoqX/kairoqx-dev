@@ -4,8 +4,8 @@
   "description": "Student developer portfolio — learning AI, Machine Learning, LLMs and full-stack development.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#f3f3f1",
+  "theme_color": "#f3f3f1",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

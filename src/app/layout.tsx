@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
-import { AnimatedBackground } from "@/components/ui/animated-background";
-import { CursorGlow } from "@/components/ui/cursor-glow";
 import { ScrollProgressBar } from "@/components/ui/scroll-progress-bar";
 import { BackToTop } from "@/components/ui/back-to-top";
 import { Navbar } from "@/components/navbar";
@@ -16,7 +14,7 @@ import { ScrollToTopOnLoad } from "@/components/scroll-to-top-on-load";
 // PERF: no explicit `weight` list -> Next loads each family as a single
 // variable-font file instead of a separate file per weight (was 10 font
 // files across the three families).
-const spaceGrotesk = Space_Grotesk({
+const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -72,8 +70,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  themeColor: "#f3f3f1",
+  colorScheme: "light",
 };
 
 const jsonLd = {
@@ -96,7 +94,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <head>
         {/*
@@ -125,15 +123,13 @@ export default function RootLayout({
       <body className="min-h-full font-body">
         <a
           href="#main"
-          className="fixed left-4 top-[-60px] z-[999] rounded-lg bg-primary px-4 py-2.5 text-white transition-[top] duration-300 focus:top-4"
+          className="fixed left-4 top-[-60px] z-[999] rounded-md bg-ink px-4 py-2.5 text-bg transition-[top] duration-300 focus:top-4"
         >
           Skip to content
         </a>
 
         <ScrollToTopOnLoad />
         <PageLoader />
-        <AnimatedBackground />
-        <CursorGlow />
         <ScrollProgressBar />
         <Navbar />
 

@@ -1,118 +1,89 @@
-"use client";
-
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { type MouseEvent } from "react";
-import { siteConfig, roles, socialLinks } from "@/lib/site-config";
+import { siteConfig, socialLinks } from "@/lib/site-config";
 import { getIcon } from "@/lib/icons";
-import { useTypingEffect } from "@/hooks/use-typing-effect";
 import { Reveal } from "@/components/ui/reveal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { Button } from "@/components/ui/button";
-import { HeroNetworkCanvas } from "@/components/hero-network-canvas";
+import { TypedText } from "@/components/typed-text";
 
-const orbitBadges = [
-  { icon: "cpu", label: "PyTorch", position: "-top-3 -left-3", delay: -1 },
-  { icon: "code", label: "Python", position: "top-1/3 -right-8", delay: -2.4 },
-  { icon: "terminal", label: "Linux", position: "-bottom-4 left-6", delay: -3.6 },
+// Feature row (mirrors the icon row on the project banners).
+const features = [
+  { icon: "cpu", label: "PyTorch" },
+  { icon: "code", label: "Python" },
+  { icon: "terminal", label: "Linux" },
 ];
 
 /**
- * PERF: the typing effect updates state every 35-70ms, forever. Living
- * inside <Hero> meant the *entire* hero (canvas wrapper, springs, social
- * links, orbit badges...) re-rendered on every keystroke. Isolated here,
- * only this one <span> re-renders.
+ * Hero — styled after the project banners: big heavy name, wide-spaced
+ * uppercase tagline, thin vertical rule, icon feature row, dark angled
+ * corner blocks, and a dark terminal chip over a framed photo.
+ *
+ * Server Component: no animation libraries, no canvas, no mouse tracking.
  */
-function TypedText() {
-  const typedText = useTypingEffect(roles);
-  return (
-    <>
-      <span className="text-white/90">{typedText}</span>
-      <span className="typing-cursor h-[1em] align-middle" />
-    </>
-  );
-}
-
 export function Hero() {
-  // Mouse-parallax for the profile orb: the orb subtly leans away from
-  // the cursor, giving the hero a sense of 3D depth.
-  const parallaxX = useMotionValue(0);
-  const parallaxY = useMotionValue(0);
-  const springX = useSpring(parallaxX, { stiffness: 80, damping: 20 });
-  const springY = useSpring(parallaxY, { stiffness: 80, damping: 20 });
-  const rotateY = useTransform(springX, [-60, 60], [-10, 10]);
-  const rotateX = useTransform(springY, [-60, 60], [10, -10]);
-
-  function handleSectionMouseMove(e: MouseEvent<HTMLElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    parallaxX.set(px * 60);
-    parallaxY.set(py * 60);
-  }
-
   return (
     <section
       id="home"
-      onMouseMove={handleSectionMouseMove}
-      className="relative flex min-h-screen items-center overflow-hidden pb-16 pt-24"
+      className="relative flex min-h-screen items-center overflow-hidden pb-20 pt-28"
     >
-      {/* Decorative glow blobs — radial gradients instead of blur() filters
-          (an 80px blur on a 420px element is very expensive to paint).
-          pointer-events-none so they never block clicks. */}
+      {/* Decorative corner geometry (static CSS shapes) */}
       <div
         aria-hidden="true"
-        className="hero-blob animate-blob pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(212,212,212,0.2), transparent 68%)",
-        }}
+        className="shape-strip pointer-events-none absolute -left-4 top-[38%] hidden h-40 w-24 md:block"
       />
       <div
         aria-hidden="true"
-        className="hero-blob pointer-events-none absolute bottom-0 right-0 h-[480px] w-[480px] rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(255,255,255,0.18), transparent 68%)",
-          animation: "blob 16s ease-in-out infinite",
-          animationDelay: "-6s",
-        }}
+        className="shape-tri-l pointer-events-none absolute -left-1 top-[46%] hidden h-24 w-12 md:block"
+      />
+      <div
+        aria-hidden="true"
+        className="shape-tri-br pointer-events-none absolute bottom-0 right-0 h-28 w-28 sm:h-40 sm:w-40 md:h-52 md:w-52"
+      />
+      <div
+        aria-hidden="true"
+        className="rule-diagonal pointer-events-none absolute bottom-6 right-24 hidden w-48 -rotate-[48deg] md:block"
       />
 
-      <HeroNetworkCanvas />
-
-      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-14 px-5 md:grid-cols-[1.15fr_0.85fr] md:px-8">
+      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-16 px-5 md:grid-cols-[1.2fr_0.8fr] md:px-8">
         <div>
           <Reveal>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
-              <span className="font-mono text-xs tracking-wide text-secondary">
-                currently_learning: AI &amp; ML
-              </span>
-            </div>
+            <p className="mb-6 font-mono text-xs tracking-wide text-muted">
+              <span className="text-ink">&gt;</span> currently_learning: AI &amp; ML
+              <br />
+              <span className="text-ink">&gt;_</span>
+            </p>
           </Reveal>
 
           <Reveal delay={0.05}>
-            <h1 className="mb-5 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-              Hi, I&apos;m{" "}
-              <span className="text-gradient-brand">{siteConfig.name}</span>.
-              <br />
-              <TypedText />
-            </h1>
+            <div className="flex items-stretch gap-6">
+              <div aria-hidden="true" className="hidden w-px bg-ink sm:block" />
+              <div>
+                <h1 className="font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+                  {siteConfig.name}
+                </h1>
+                <p className="mt-4 min-h-[1.75rem] font-display text-sm font-light uppercase tracking-[0.28em] text-ink/80 sm:text-base">
+                  <TypedText />
+                </p>
+                <p className="mt-3 font-display text-sm tracking-[0.12em] text-muted">
+                  Student <span className="mx-1.5">•</span> Builder{" "}
+                  <span className="mx-1.5">•</span> Open Source
+                </p>
+              </div>
+            </div>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="mb-9 max-w-xl text-lg leading-relaxed text-muted">
+            <p className="mb-9 mt-9 max-w-xl text-lg leading-relaxed text-muted">
               A student developer exploring Artificial Intelligence, Machine
               Learning and Large Language Models — one project at a time.
-              I&apos;m not an expert yet; I&apos;m a curious builder who
-              learns by shipping things, breaking them, and figuring out why.
+              I&apos;m not an expert yet; I&apos;m a curious builder who learns
+              by shipping things, breaking them, and figuring out why.
             </p>
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="mb-12 flex flex-wrap items-center gap-4">
+            <div className="mb-10 flex flex-wrap items-center gap-4">
               <Magnetic>
                 <Button asChild>
                   <a href="#projects" className="inline-flex items-center gap-2">
@@ -130,8 +101,29 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.2}>
+            <div className="mb-10 flex max-w-md items-stretch">
+              {features.map((f, i) => {
+                const Icon = getIcon(f.icon);
+                return (
+                  <div
+                    key={f.label}
+                    className={`flex flex-1 flex-col items-center gap-2 px-3 py-1 ${
+                      i > 0 ? "border-l border-line" : ""
+                    }`}
+                  >
+                    <Icon size={22} strokeWidth={1.6} className="text-ink" />
+                    <span className="text-center text-xs text-ink/80">
+                      {f.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.25}>
             <div className="flex items-center gap-5">
-              <span className="font-mono text-xs uppercase tracking-widest text-muted">
+              <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
                 Find me
               </span>
               <div className="flex items-center gap-3">
@@ -144,7 +136,7 @@ export function Hero() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={s.label}
-                        className="glass flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:text-secondary"
+                        className="glass flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:border-ink hover:text-ink"
                       >
                         <Icon size={18} />
                       </a>
@@ -156,64 +148,41 @@ export function Hero() {
           </Reveal>
         </div>
 
-        {/* Profile orb with mouse-parallax depth + holographic rings */}
-        <Reveal direction="scale" className="relative mx-auto h-72 w-72 sm:h-80 sm:w-80">
-          <motion.div
-            style={{ rotateX, rotateY, transformPerspective: 1000 }}
-            className="relative h-full w-full"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute -inset-10 animate-pulse rounded-full"
-              style={{
-                animationDuration: "4s",
-                background:
-                  "radial-gradient(circle, rgba(255,255,255,0.22), transparent 68%)",
-              }}
+        {/* Framed photo with an offset panel behind it + a dark terminal chip */}
+        <Reveal direction="scale" className="relative mx-auto w-full max-w-sm">
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-4 translate-y-4 rounded-xl bg-ink/[.07]"
+          />
+          <div className="relative aspect-square overflow-hidden rounded-xl border border-line bg-surface">
+            <Image
+              src="https://avatars.githubusercontent.com/u/190733021?v=4&t=1"
+              alt={`${siteConfig.name} profile photo`}
+              width={420}
+              height={420}
+              className="h-full w-full object-cover grayscale transition-[filter] duration-500 hover:grayscale-0"
+              sizes="(min-width: 768px) 384px, 90vw"
+              priority
             />
-            {/* Holographic rings */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 animate-float-slow rounded-full border border-secondary/25"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute -inset-4 rounded-full border border-primary/15"
-              style={{ animation: "float 9s ease-in-out infinite reverse" }}
-            />
-            <div className="gradient-border glass absolute inset-4 flex items-center justify-center overflow-hidden rounded-full">
-              <Image
-                src="https://avatars.githubusercontent.com/u/190733021?v=4&t=1"
-                alt={`${siteConfig.name} profile photo`}
-                width={320}
-                height={320}
-                className="h-full w-full object-cover"
-                sizes="(min-width: 640px) 320px, 288px"
-                priority
-              />
-            </div>
+          </div>
 
-            {orbitBadges.map((badge) => {
-              const Icon = getIcon(badge.icon);
-              return (
-                <div
-                  key={badge.label}
-                  className={`glass animate-float absolute ${badge.position} flex items-center gap-2 rounded-2xl px-3 py-2`}
-                  style={{ animationDelay: `${badge.delay}s` }}
-                >
-                  <Icon size={16} className="text-secondary" />
-                  <span className="font-mono text-xs">{badge.label}</span>
-                </div>
-              );
-            })}
-          </motion.div>
+          <div className="absolute -bottom-6 -left-4 w-56 rounded-lg bg-panel p-3.5 font-mono text-[0.7rem] leading-relaxed text-white shadow-[6px_6px_0_0_rgba(22,22,22,0.1)] sm:-left-8">
+            <div className="mb-2 flex gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-white" />
+              <span className="h-2 w-2 rounded-full bg-white" />
+              <span className="h-2 w-2 rounded-full bg-white" />
+            </div>
+            <p className="text-white/90">&gt; kairoqx</p>
+            <p className="text-white/60">&gt; loading projects...</p>
+            <p className="text-white/90">&gt; ready.</p>
+          </div>
         </Reveal>
       </div>
 
       <a
         href="#about"
         aria-label="Scroll to About"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted transition-colors hover:text-white"
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-muted transition-colors hover:text-ink md:block"
       >
         <svg
           className="animate-float-slow"

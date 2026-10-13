@@ -9,10 +9,10 @@ export function Skills() {
     <section id="skills" className="relative py-28 md:py-36">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mb-14 max-w-2xl">
-          <span className="font-mono text-sm tracking-wide text-secondary">
+          <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
             {"// skills"}
           </span>
-          <h2 className="mb-4 mt-3 font-display text-3xl font-bold md:text-4xl">
+          <h2 className="mb-4 mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
             What I&apos;m getting comfortable with
           </h2>
           <p className="leading-relaxed text-muted">
@@ -28,7 +28,7 @@ export function Skills() {
               <Reveal key={cat.title} delay={i * 0.1}>
                 <GlassCard className="h-full p-7">
                   <div className="mb-6 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-secondary/25 to-primary/20 text-secondary">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-bg text-ink">
                       <Icon size={20} />
                     </div>
                     <h3 className="font-display text-lg font-semibold">

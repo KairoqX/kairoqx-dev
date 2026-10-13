@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ExternalLink, Star, Calendar, HardDrive, Tag } from "lucide-react";
+import { ExternalLink, Star, Calendar } from "lucide-react";
 import { GithubIcon } from "@/components/ui/brand-icons";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/utils/format-relative-time";
@@ -22,37 +22,14 @@ export interface ProjectCardData {
   size: number;
 }
 
-function initials(name: string) {
-  return name
-    .split(/[\s._-]/)
-    .filter(Boolean)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-const gradients = [
-  "from-secondary/60 to-primary/30",
-  "from-primary/60 to-secondary/30",
-  "from-secondary/50 to-primary/40",
-  "from-primary/50 to-secondary/25",
-];
-
 /**
- * PERF: this used to be a Framer Motion component with two springs and a
- * 3D-tilt mouse handler per card. It's now a plain anchor with CSS-only
- * hover effects (GPU-friendly `translate`/`opacity`/`scale`), and the hover
- * overlay no longer uses backdrop-blur.
+ * Project card. With an `image` it shows your banner; without one it draws a
+ * banner in the same visual language (big bold name, spaced uppercase
+ * subtitle, dark corner block) so every card looks consistent.
+ *
+ * Plain anchor + CSS-only hover — no animation library.
  */
-export function ProjectCard({
-  project,
-  index,
-}: {
-  project: ProjectCardData;
-  index: number;
-}) {
-  const grad = gradients[index % gradients.length];
+export function ProjectCard({ project }: { project: ProjectCardData; index?: number }) {
   const href = project.homepage || project.html_url;
   const displayName = project.title ?? project.name;
   // Animated GIFs must skip Next's image optimizer or they'd lose animation.
@@ -63,12 +40,10 @@ export function ProjectCard({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="glass gradient-border group flex h-full flex-col overflow-hidden rounded-2xl transition-[translate,border-color,background-color] duration-300 ease-out hover:-translate-y-1.5 hover:border-secondary/40 hover:bg-white/[.07]"
+      className="glass group flex h-full flex-col overflow-hidden rounded-xl transition-[translate,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-ink"
     >
-      {/* Banner with hover-reveal metadata overlay */}
-      <div
-        className={`relative h-40 overflow-hidden bg-gradient-to-br ${grad} flex items-center justify-center`}
-      >
+      {/* Banner */}
+      <div className="relative aspect-[5/2] overflow-hidden border-b border-line bg-bg">
         {project.image ? (
           <Image
             src={project.image}
@@ -76,56 +51,28 @@ export function ProjectCard({
             fill
             sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
             unoptimized={isGif}
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <span className="font-display text-4xl font-bold text-white/25 transition-transform duration-500 group-hover:scale-110">
-            {initials(displayName)}
-          </span>
-        )}
-
-        {/* Glass reflection sweep on hover */}
-        <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-
-        {/* Metadata overlay revealed on hover */}
-        <div className="absolute inset-0 flex flex-col justify-end gap-1.5 bg-black/70 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.7rem] text-white/85">
-            <span className="inline-flex items-center gap-1">
-              <Star size={12} /> {project.stargazers_count}
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <Calendar size={12} />
-              {/* The relative time depends on "now", so server and client can
-                  differ — suppress the (harmless) hydration text mismatch. */}
-              <span suppressHydrationWarning>
-                {formatRelativeTime(project.pushed_at)}
-              </span>
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <HardDrive size={12} /> {Math.round(project.size / 1024) || 1}
-              MB
-            </span>
+          <div className="flex h-full flex-col justify-center px-6">
+            <div
+              aria-hidden="true"
+              className="shape-tri-br absolute bottom-0 right-0 h-14 w-14"
+            />
+            <p className="font-display text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">
+              {displayName}
+            </p>
+            {project.language && (
+              <p className="mt-2 font-display text-[0.7rem] font-light uppercase tracking-[0.28em] text-muted">
+                {project.language}
+              </p>
+            )}
           </div>
-          {project.topics.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <Tag size={12} className="text-white/60" />
-              {project.topics.slice(0, 4).map((t) => (
-                <span
-                  key={t}
-                  className="rounded-full bg-white/15 px-2 py-0.5 text-[0.65rem] text-white/85"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="mb-2 font-display text-lg font-semibold">
-          {displayName}
-        </h3>
+        <h3 className="mb-2 font-display text-lg font-bold">{displayName}</h3>
         <p className="mb-4 flex-1 text-sm leading-relaxed text-muted">
           {project.description || "No description provided yet."}
         </p>
@@ -137,15 +84,27 @@ export function ProjectCard({
           ))}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-          <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted transition-colors group-hover:text-white">
+        <div className="flex items-center gap-4 border-t border-line pt-4 font-mono text-xs text-muted">
+          <span className="inline-flex items-center gap-1.5 transition-colors group-hover:text-ink">
             <GithubIcon size={14} /> Code
           </span>
           {project.homepage && (
-            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-secondary transition-colors group-hover:text-white">
+            <span className="inline-flex items-center gap-1.5 text-ink">
               <ExternalLink size={14} /> Live Demo
             </span>
           )}
+          <span className="ml-auto inline-flex items-center gap-3">
+            <span className="inline-flex items-center gap-1">
+              <Star size={12} /> {project.stargazers_count}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Calendar size={12} />
+              {/* Depends on "now", so server and client can differ. */}
+              <span suppressHydrationWarning>
+                {formatRelativeTime(project.pushed_at)}
+              </span>
+            </span>
+          </span>
         </div>
       </div>
     </a>

@@ -17,10 +17,10 @@ export async function Projects() {
     <section id="projects" className="relative py-28 md:py-36">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mb-10 max-w-2xl">
-          <span className="font-mono text-sm tracking-wide text-secondary">
+          <span className="font-mono text-xs uppercase tracking-[0.26em] text-muted">
             {"// featured projects"}
           </span>
-          <h2 className="mb-4 mt-3 font-display text-3xl font-bold md:text-4xl">
+          <h2 className="mb-4 mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">
             Things I&apos;ve built while learning
           </h2>
           <p className="leading-relaxed text-muted">
@@ -29,7 +29,7 @@ export async function Projects() {
             taught me something.
           </p>
           {!isLive && (
-            <p className="mt-3 font-mono text-xs text-primary/80">
+            <p className="mt-3 font-mono text-xs text-muted">
               Showing cached project data — live GitHub fetch is temporarily
               unavailable.
             </p>

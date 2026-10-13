@@ -23,7 +23,7 @@ export function Navbar() {
         "fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color] duration-300",
         // PERF: solid-ish background instead of backdrop-blur-xl + a large
         // box-shadow — a blur over scrolling content is re-computed every frame.
-        scrolled && "border-white/10 bg-black/85"
+        scrolled && "border-line bg-bg/90"
       )}
     >
       <nav
@@ -34,7 +34,7 @@ export function Navbar() {
           href="#home"
           className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-secondary to-primary text-sm font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-ink text-sm font-bold text-bg">
             K
           </span>
           <span>{siteConfig.name}</span>
@@ -49,15 +49,15 @@ export function Navbar() {
                 <a
                   href={link.href}
                   className={cn(
-                    "relative transition-colors hover:text-white",
-                    isActive && "text-white"
+                    "relative transition-colors hover:text-ink",
+                    isActive && "text-ink"
                   )}
                 >
                   {link.label}
                   {isActive && (
                     <motion.span
                       layoutId="nav-underline"
-                      className="absolute -bottom-1.5 left-0 h-[2px] w-full bg-gradient-to-r from-secondary to-primary"
+                      className="absolute -bottom-1.5 left-0 h-[2px] w-full bg-ink"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -75,7 +75,7 @@ export function Navbar() {
 
         <button
           onClick={() => setMobileOpen((o) => !o)}
-          className="p-2 text-white md:hidden"
+          className="p-2 text-ink md:hidden"
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
@@ -92,7 +92,7 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="glass overflow-hidden border-t border-white/5 px-5 md:hidden"
+            className="glass overflow-hidden border-t border-line px-5 md:hidden"
           >
             <ul className="flex flex-col gap-1 py-4 text-sm font-medium text-muted">
               {navLinks.map((link) => (
@@ -100,7 +100,7 @@ export function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block py-2.5 hover:text-white"
+                    className="block py-2.5 hover:text-ink"
                   >
                     {link.label}
                   </a>

@@ -22,7 +22,7 @@ export function BackToTop() {
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               aria-label="Back to top"
-              className="glass flex h-12 w-12 items-center justify-center rounded-full border border-white/10 text-white transition-colors hover:border-secondary/50"
+              className="glass flex h-12 w-12 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-ink"
             >
               <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.4} />
             </button>

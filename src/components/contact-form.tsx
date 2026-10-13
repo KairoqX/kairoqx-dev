@@ -66,7 +66,7 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="glass gradient-border space-y-5 rounded-2xl p-8"
+      className="glass space-y-5 rounded-xl p-8"
     >
       <div>
         <label htmlFor="name" className="mb-2 block font-mono text-xs text-muted">
@@ -78,10 +78,10 @@ export function ContactForm() {
           name="name"
           type="text"
           placeholder="Your name"
-          className="w-full rounded-xl border border-white/10 bg-white/[.04] px-4 py-3 text-white placeholder:text-white/30 transition-[border-color,box-shadow,background] focus:border-secondary focus:bg-white/[.06] focus:shadow-[0_0_0_3px_rgba(255,255,255,0.15)] focus:outline-none"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(22,22,22,0.08)] focus:outline-none"
         />
         {fieldErrors.name && (
-          <p className="mt-1.5 text-xs text-primary">{fieldErrors.name}</p>
+          <p className="mt-1.5 text-xs text-red-700">{fieldErrors.name}</p>
         )}
       </div>
 
@@ -95,10 +95,10 @@ export function ContactForm() {
           name="email"
           type="email"
           placeholder="you@example.com"
-          className="w-full rounded-xl border border-white/10 bg-white/[.04] px-4 py-3 text-white placeholder:text-white/30 transition-[border-color,box-shadow,background] focus:border-secondary focus:bg-white/[.06] focus:shadow-[0_0_0_3px_rgba(255,255,255,0.15)] focus:outline-none"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(22,22,22,0.08)] focus:outline-none"
         />
         {fieldErrors.email && (
-          <p className="mt-1.5 text-xs text-primary">{fieldErrors.email}</p>
+          <p className="mt-1.5 text-xs text-red-700">{fieldErrors.email}</p>
         )}
       </div>
 
@@ -112,10 +112,10 @@ export function ContactForm() {
           name="message"
           rows={4}
           placeholder="What's on your mind?"
-          className="w-full resize-none rounded-xl border border-white/10 bg-white/[.04] px-4 py-3 text-white placeholder:text-white/30 transition-[border-color,box-shadow,background] focus:border-secondary focus:bg-white/[.06] focus:shadow-[0_0_0_3px_rgba(255,255,255,0.15)] focus:outline-none"
+          className="w-full resize-none rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(22,22,22,0.08)] focus:outline-none"
         />
         {fieldErrors.message && (
-          <p className="mt-1.5 text-xs text-primary">{fieldErrors.message}</p>
+          <p className="mt-1.5 text-xs text-red-700">{fieldErrors.message}</p>
         )}
       </div>
 

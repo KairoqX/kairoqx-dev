@@ -47,9 +47,9 @@ export function ProjectsGrid({ projects }: { projects: ProjectCardData[] }) {
             aria-selected={filter === key}
             onClick={() => setFilter(key)}
             className={cn(
-              "rounded-full border border-white/10 px-4 py-2 font-mono text-xs text-muted transition-all",
+              "rounded-md border border-line bg-surface px-4 py-2 font-mono text-xs uppercase tracking-widest text-muted transition-colors hover:border-ink hover:text-ink",
               filter === key &&
-                "border-transparent bg-gradient-to-r from-secondary to-primary text-white"
+                "border-ink bg-ink text-bg"
             )}
           >
             {key === "all" ? "All" : key === "ai" ? "AI / ML" : "Web Dev"}
