@@ -152,7 +152,7 @@ export function TerminalWidget() {
         <Reveal delay={0.1}>
           <div
             onClick={() => inputRef.current?.focus()}
-            className="overflow-hidden rounded-xl bg-panel text-white shadow-[10px_10px_0_0_rgba(22,22,22,0.08)]"
+            className="overflow-hidden rounded-xl bg-panel text-white shadow-[10px_10px_0_0_rgba(128,128,128,0.15)]"
           >
             <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
               <span className="h-2.5 w-2.5 rounded-full bg-white" />

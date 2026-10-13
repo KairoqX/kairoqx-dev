@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 import { navLinks, siteConfig } from "@/lib/site-config";
 import { useScrolledPast } from "@/hooks/use-scrolled-past";
 import { useActiveSection } from "@/hooks/use-active-section";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Magnetic } from "@/components/ui/magnetic";
 import { Button } from "@/components/ui/button";
 
@@ -67,21 +68,24 @@ export function Navbar() {
           })}
         </ul>
 
-        <Magnetic className="hidden md:inline-block">
-          <Button asChild size="sm" className="hidden md:inline-flex">
-            <a href="#contact">Let&apos;s talk</a>
-          </Button>
-        </Magnetic>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Magnetic className="hidden md:inline-block">
+            <Button asChild size="sm" className="hidden md:inline-flex">
+              <a href="#contact">Let&apos;s talk</a>
+            </Button>
+          </Magnetic>
 
-        <button
-          onClick={() => setMobileOpen((o) => !o)}
-          className="p-2 text-ink md:hidden"
-          aria-label="Toggle menu"
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          <button
+            onClick={() => setMobileOpen((o) => !o)}
+            className="p-2 text-ink md:hidden"
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>

@@ -8,7 +8,13 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { Magnetic } from "@/components/ui/magnetic";
 import { Button } from "@/components/ui/button";
 
-const langColors = ["#161616", "#3f3f3f", "#6b6b6b", "#9a9a96", "#c4c4bf"];
+const langColors = [
+  "var(--ink)",
+  "color-mix(in srgb, var(--ink) 75%, var(--bg))",
+  "color-mix(in srgb, var(--ink) 55%, var(--bg))",
+  "color-mix(in srgb, var(--ink) 40%, var(--bg))",
+  "color-mix(in srgb, var(--ink) 28%, var(--bg))",
+];
 
 export async function GithubSection() {
   const { user, repos, totalStars, languageBreakdown, isLive } =
@@ -76,7 +82,7 @@ export async function GithubSection() {
             <img
               src={`https://ghchart.rshah.org/161616/${siteConfig.githubUsername}`}
               alt={`${siteConfig.name} GitHub contribution graph`}
-              className="w-full rounded-lg"
+              className="w-full min-w-[640px] rounded-lg bg-white p-3"
               loading="lazy"
             />
           </GlassCard>

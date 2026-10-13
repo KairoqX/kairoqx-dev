@@ -78,7 +78,7 @@ export function ContactForm() {
           name="name"
           type="text"
           placeholder="Your name"
-          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(22,22,22,0.08)] focus:outline-none"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(128,128,128,0.2)] focus:outline-none"
         />
         {fieldErrors.name && (
           <p className="mt-1.5 text-xs text-red-700">{fieldErrors.name}</p>
@@ -95,7 +95,7 @@ export function ContactForm() {
           name="email"
           type="email"
           placeholder="you@example.com"
-          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(22,22,22,0.08)] focus:outline-none"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(128,128,128,0.2)] focus:outline-none"
         />
         {fieldErrors.email && (
           <p className="mt-1.5 text-xs text-red-700">{fieldErrors.email}</p>
@@ -112,7 +112,7 @@ export function ContactForm() {
           name="message"
           rows={4}
           placeholder="What's on your mind?"
-          className="w-full resize-none rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(22,22,22,0.08)] focus:outline-none"
+          className="w-full resize-none rounded-lg border border-line bg-surface px-4 py-3 text-ink placeholder:text-ink/35 transition-[border-color,box-shadow,background] focus:border-ink focus:shadow-[0_0_0_3px_rgba(128,128,128,0.2)] focus:outline-none"
         />
         {fieldErrors.message && (
           <p className="mt-1.5 text-xs text-red-700">{fieldErrors.message}</p>

@@ -15,22 +15,45 @@
  * the whole site follows.
  * ===========================================================================
  */
+/* Runtime-switchable palette. Light is the default; the toggle sets
+   <html data-theme="dark"> (see ThemeToggle + the inline script in layout). */
+:root {
+  --bg: #f3f3f1;
+  --surface: #ffffff;
+  --ink: #161616;
+  --panel: #1c1c1e;
+  --line: #d9d9d4;
+  --muted: #6b6b6b;
+  --scroll-thumb: #b9b9b4;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #101011;
+  --surface: #18181a;
+  --ink: #f0f0ee;
+  --panel: #232326;
+  --line: #2c2c30;
+  --muted: #9a9a96;
+  --scroll-thumb: #3a3a3e;
+  color-scheme: dark;
+}
+
 @theme inline {
-  --color-bg: #f3f3f1;
-  --color-bg-elevated: #ffffff;
-  --color-surface: #ffffff;
-  --color-ink: #161616;
-  --color-panel: #1c1c1e;
-  --color-line: #d9d9d4;
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--surface);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
 
-  --color-primary: #161616;
-  --color-primary-dim: #3a3a3a;
-  --color-secondary: #555555;
-  --color-secondary-dim: #8a8a8a;
-  --color-success: #161616;
+  --color-primary: var(--ink);
+  --color-primary-dim: var(--muted);
+  --color-secondary: var(--muted);
+  --color-secondary-dim: var(--muted);
+  --color-success: var(--ink);
 
-  --color-text: #161616;
-  --color-muted: #6b6b6b;
+  --color-text: var(--ink);
+  --color-muted: var(--muted);
 
   --font-display: "Montserrat", ui-sans-serif, sans-serif;
   --font-body: "Inter", ui-sans-serif, sans-serif;
@@ -65,37 +88,37 @@ html {
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-body);
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-ink);
-  color: var(--color-bg);
+  background: var(--ink);
+  color: var(--bg);
 }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #b9b9b4;
+  background: var(--scroll-thumb);
   border-radius: 10px;
-  border: 2px solid var(--color-bg);
+  border: 2px solid var(--bg);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink);
+  background: var(--ink);
 }
 
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -108,20 +131,20 @@ textarea:focus-visible {
      name so existing markup keeps working — there's no glass effect any
      more: no blur, no transparency.) */
   .glass {
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
+    background: var(--surface);
+    border: 1px solid var(--line);
   }
 }
 
 .text-gradient-brand {
-  color: var(--color-ink);
+  color: var(--ink);
 }
 
 .typing-cursor {
   display: inline-block;
   width: 2px;
   margin-left: 3px;
-  background: var(--color-ink);
+  background: var(--ink);
   animation: var(--animate-blink);
 }
 
@@ -130,24 +153,24 @@ textarea:focus-visible {
    blocks, a light-grey strip, and thin diagonal rules. Pure CSS, static.
    --------------------------------------------------------------------------- */
 .shape-tri-br {
-  background: var(--color-ink);
+  background: var(--ink);
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 .shape-tri-tl {
-  background: var(--color-ink);
+  background: var(--ink);
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 .shape-tri-l {
-  background: var(--color-ink);
+  background: var(--ink);
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 .shape-strip {
-  background: rgba(22, 22, 22, 0.06);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%);
 }
 .rule-diagonal {
   height: 1px;
-  background: var(--color-ink);
+  background: var(--ink);
   transform-origin: left center;
 }
 
@@ -246,4 +269,15 @@ textarea:focus-visible {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Theme toggle: show the moon in light mode (click -> dark), sun in dark mode. */
+.theme-icon-sun {
+  display: none;
+}
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
 }

@@ -94,9 +94,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <head>
+        {/* Apply the saved theme before first paint (prevents a flash). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}`,
+          }}
+        />
         {/*
           Disables the browser's native scroll-restoration BEFORE hydration
           — not inside a React effect, which runs too late (the browser

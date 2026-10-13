@@ -75,6 +75,9 @@ export const projectsToShow: readonly ProjectEntry[] = [
      category: "web",
     image: "/projects/vexiqora.png"
     },
-  "Portable-LLM",
+  {repo:"Portable-LLM",
+    category: "ai",
+    image: "/projects/portable-llm1.png"
+  },
 
 ];
