@@ -40,7 +40,7 @@
  * -----------------------------------------------------------------------
  */
 
-export type ProjectCategory = "ai" | "web";
+export type ProjectCategory = "ai" | "web" ;
 
 export type ProjectEntry =
   | string
@@ -55,6 +55,10 @@ export type ProjectEntry =
     };
 
 export const projectsToShow: readonly ProjectEntry[] = [
+  {repo: "kaze-study",
+  
+    image: "/projects/kaze-study.png"
+  },
   { repo: "micro-gpt", image: "/projects/micro-gpt.webp" },
 
   {repo: "MahiruAI",
